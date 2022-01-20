@@ -1,34 +1,33 @@
-import { useState } from "react"
-import MegaNumeros from "../../components/MegaNumeros"
+import { useEffect, useState } from "react"
+import NumeroDisplay from "../../components/NumeroDisplay"
+import { mega } from "../../function/mega"
 
 export default function megaSena() {
     
+    const [qtde, setQtde] = useState(6)
     const [valor, setValor] = useState([])
 
-    const gerarSeisNumeros = () => {
-        const num = []
-        for (let i = 0; i < 6; i++) {
-            const data = {
-                id: i,
-                nume: Math.floor(Math.random() * 60), 
-            }
-            num.push(data)
-            setValor(num)
-        }
-        console.log('valor', valor)
+    useEffect(() => {
+        setValor(mega(qtde))
+    }, [])
+
+    function renderNumeros() {
+        return valor.map(numero => <NumeroDisplay key={numero} numero={numero} />)
     }
 
     return (
         <div style={{
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
             alignItems: "center",
         }}>
             <h1>Mega Sena</h1>
-            <MegaNumeros valor={valor}/>
+            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+                {renderNumeros()}
+            </div>
             <div>
-                <button onClick={gerarSeisNumeros}>Gerar 6 números</button>
+                <input type="number" min={6} max={20}  value={qtde} onChange={ev => setQtde(ev.target.value)}/>
+                <button onClick={() => setValor(mega(qtde))}>Gerar Aposta</button>
             </div>
         </div>
     )    
